@@ -1,0 +1,38 @@
+[project]
+name = "continual-knowledge-lora"
+version = "0.1.0"
+description = "Teach an LLM new facts in steps and measure what it forgets: plain LoRA, KL to the previous model, and LoRA experts with a learned router."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+    "torch>=2.4",
+    "transformers>=5",
+    "safetensors",
+    "huggingface_hub",
+    "numpy",
+    "pandas",
+    "pyarrow",
+    "scikit-learn",
+]
+
+[project.scripts]
+ckl-run = "ckl.run:main"
+ckl-report = "ckl.report:main"
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ckl"]
+
+[tool.ruff]
+line-length = 110
+
+[tool.ruff.lint.per-file-ignores]
+# run.py: helper closures are called inside the same seed iteration; the log file lives for the whole run
+"src/ckl/run.py" = ["B023", "SIM115"]
